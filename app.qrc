@@ -1,0 +1,14 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>images/sheet.png</file>
+  </qresource>
+  <qresource prefix="logo">
+    <file>images/VExcel.png</file>
+  </qresource>
+  <qresource prefix="iconsMain">
+    <file>images/logout.png</file>
+    <file>images/open.png</file>
+    <file>images/save1.png</file>
+    <file>images/save2.png</file>
+  </qresource>
+</RCC>
