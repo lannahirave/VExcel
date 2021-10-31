@@ -6,6 +6,7 @@
     <file>images/VExcel.png</file>
   </qresource>
   <qresource prefix="iconsMain">
+    <file>images/new-document.png</file>
     <file>images/logout.png</file>
     <file>images/open.png</file>
     <file>images/save1.png</file>

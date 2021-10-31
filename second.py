@@ -82,6 +82,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuAbout = QtWidgets.QMenu(self.menubar)
         self.menuAbout.setObjectName("menuAbout")
         MainWindow.setMenuBar(self.menubar)
+        self.actionNew = QtWidgets.QAction(MainWindow)
+        self.actionNew.setObjectName("actionOpen")
+        self.actionNew.triggered.connect(self.new_table)
+        icon0 = QtGui.QIcon()
+        icon0.addPixmap(QtGui.QPixmap(":/iconsMain/images/new-document.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionNew.setIcon(icon0)
+        self.actionNew.setObjectName("actionNew")
         self.actionOpen = QtWidgets.QAction(MainWindow)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/iconsMain/images/open.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -121,6 +128,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.action.setObjectName("action")
         self.action_2 = QtWidgets.QAction(MainWindow)
         self.action_2.setObjectName("action_2")
+        self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
         self.menuFile.addAction(self.actionSave_as)
@@ -154,7 +162,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         column = self.tableWidget.currentColumn()
         item_from_cell = self.tableWidget.item(row, column)
         if type(item_from_cell) == type(None):
-            print("onItemChanged NONE")
+            #print("onItemChanged NONE")
             self.tableWidget.blockSignals(False)
             return
         cell_text = item_from_cell.text() #input
@@ -181,7 +189,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         if row==column == -1 :
             self.tableWidget.blockSignals(False)
             return
-        print("Cell:", row, column )
+        #print("Cell:", row, column )
         text = self.LineEdit.text()
         result = self.processeer(text)
         itemH = QTableWidgetItem(text)
@@ -214,31 +222,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
            self.tableHidden.setItem(row, col, QTableWidgetItem(""))
         self.tableWidget.blockSignals(False)
 
-    def del2eteContent(self):
-        row = self.tableWidget.rowCount()
-        column = self.tableWidget.colorCount()
-        for i in range(row):
-            for k in range(column):
-                item = self.tableWidget.item(i,k)
-                try:
-                    if item.isSelected():
-                        print(i, k)
-                        self.tableWidget.setItem(i, k, QTableWidgetItem())
-                except Exception as exp:
-                    print(exp)
-                    continue
-
-    def del1eteContent(self):
-        selected_items = self.tableWidget.selectionModel()
-        if not selected_items.hasSelection():
-            print("No selection")
-            return
-        items = selected_items.selectedIndexes()
-        for item in items:
-            row = item.row()
-            column = item.column()
-            self.tableWidget.setItem(row, column, QTableWidgetItem(""))
-
     def update(self):
 
         self.tableWidget.blockSignals(True)
@@ -263,7 +246,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 self.tableWidget.setItem(i, k, result_item)
         self.tableWidget.blockSignals(False)
     
-
     def add_row(self):
         self.tableWidget.add_row()
         self.tableHidden.add_row()
@@ -273,13 +255,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.tableHidden.add_column()
 
     def new_table(self):
-        self.tableWidget.clearContents()
-        self.tableHidden.clearContents()
-        # restoring tables view to default
-        self.tableWidget.create_table_cells()
-        self.tableWidget.initialize_cells()
-        self.tableHidden.create_table_cells()
-        self.tableHidden.initialize_cells()
+        self.table_default()
+    
+    def table_default(self):
+        self.tableWidget.to_default()
+        self.tableHidden.to_default()
         self.save = 0
         self.save_name = ''
         self.save_path = ''
@@ -464,6 +444,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuFile.setTitle(_translate("MainWindow", "Файл"))
         self.menuEdit.setTitle(_translate("MainWindow", "Редагувати"))
         self.menuAbout.setTitle(_translate("MainWindow", "Про програму"))
+        self.actionNew.setText(_translate("MainWindow", "Нова таблиця"))
         self.actionOpen.setText(_translate("MainWindow", "Відкрити"))
         self.actionSave.setText(_translate("MainWindow", "Зберегти"))
         self.actionSave_as.setText(_translate("MainWindow", "Зберегти як"))

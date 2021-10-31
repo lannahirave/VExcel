@@ -41,7 +41,6 @@ class TableModel(QtWidgets.QTableWidget):
         for _ in range(num):
             self.insertRow(self.rowCount())
             self.n += 1
-        
     
     def add_column(self, num=1):
         #TODO
@@ -71,8 +70,12 @@ class TableModel(QtWidgets.QTableWidget):
             self.last_header = header
         self.create_table_cells()
 
-    def update(self):
-        pass
+    def to_default(self):
+        self.clearContents()
+        self.alpha = self.alphabet
+        self.n = 200
+        self.create_table_cells()
+        self.initialize_cells()
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
