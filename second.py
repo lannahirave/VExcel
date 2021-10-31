@@ -206,7 +206,38 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.tableWidget.blockSignals(False)
 
     def deleteContent(self):
-        pass
+        self.tableWidget.blockSignals(True)
+        for item in self.tableWidget.selectedItems():
+           row = item.row()
+           col = item.column()
+           self.tableWidget.setItem(row, col, QTableWidgetItem(""))
+           self.tableHidden.setItem(row, col, QTableWidgetItem(""))
+        self.tableWidget.blockSignals(False)
+
+    def del2eteContent(self):
+        row = self.tableWidget.rowCount()
+        column = self.tableWidget.colorCount()
+        for i in range(row):
+            for k in range(column):
+                item = self.tableWidget.item(i,k)
+                try:
+                    if item.isSelected():
+                        print(i, k)
+                        self.tableWidget.setItem(i, k, QTableWidgetItem())
+                except Exception as exp:
+                    print(exp)
+                    continue
+
+    def del1eteContent(self):
+        selected_items = self.tableWidget.selectionModel()
+        if not selected_items.hasSelection():
+            print("No selection")
+            return
+        items = selected_items.selectedIndexes()
+        for item in items:
+            row = item.row()
+            column = item.column()
+            self.tableWidget.setItem(row, column, QTableWidgetItem(""))
 
     def update(self):
 
