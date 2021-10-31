@@ -1,5 +1,6 @@
-#start window
-
+# start window
+# maintains first.py source code
+# creates launcher window
 from first import Ui_main
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets

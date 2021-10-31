@@ -1,5 +1,6 @@
 # table app
-
+# maintains second.py source code
+# creates MAIN window 
 from second import Ui_MainWindow
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
