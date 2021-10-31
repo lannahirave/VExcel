@@ -43,14 +43,12 @@ class TableModel(QtWidgets.QTableWidget):
             self.n += 1
     
     def add_column(self, num=1):
-        #TODO
         for _ in range(num):
             header = ''
             last_header = self.last_header
             if last_header == "Z":
                 header = "AA"
             elif len(last_header) == 2:
-                #print("len2")
                 first_letter = last_header[0]
                 second_letter = last_header[1]
                 if second_letter == "Z":
@@ -66,7 +64,7 @@ class TableModel(QtWidgets.QTableWidget):
                 print("STH bad hapenned")
                 break
             self.alpha.append(header)
-            print(self.alpha)
+            #print(self.alpha)
             self.last_header = header
         self.create_table_cells()
 

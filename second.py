@@ -256,12 +256,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def new_table(self):
         self.table_default()
+        self.setWindowTitle("VExcel")
     
     def table_default(self):
         self.tableWidget.to_default()
         self.tableHidden.to_default()
-        self.save = 0
-        self.save_name = ''
+        self.save_value = 0
         self.save_path = ''
     #
     # Functions for saving tables
@@ -279,7 +279,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def open(self):
         self.handleOpen()
     #
-    # save func doesnt save
+    # save func 
     #
     def handleSave(self, path=('','')):
         self.tableWidget.blockSignals(True)
@@ -288,7 +288,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 path = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'CSV(*.csv)')
             print(path)
             if path != '' and path is not None:
-                with open(path[0], 'w') as stream:
+                with open(path[0], 'w', encoding='utf-8') as stream:
                     writer = csv.writer(stream)
                     for row in range(self.tableWidget.rowCount()):
                         rowdata = []
@@ -300,8 +300,21 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                             else:
                                 rowdata.append('')
                         writer.writerow(rowdata)
+                with open(path[0][:-4] + 'h' + path[0][-4:], 'w', encoding='utf-8') as stream:
+                    writer = csv.writer(stream)
+                    for row in range(self.tableHidden.rowCount()):
+                        rowdata = []
+                        for column in range(self.tableHidden.columnCount()):
+                            item = self.tableHidden.item(row, column)
+                            if item is not None:
+                                rowdata.append(
+                                    (item.text()))
+                            else:
+                                rowdata.append('')
+                        writer.writerow(rowdata)
                 self.save_value = 1
                 self.save_place = path
+                self.setWindowTitle("VExcel" + path[0][:-4] + 'h' + path[0][-4:])
         except Exception as exp:
                 self.LineEdit.setText(f"{exp}")
         finally:
@@ -313,12 +326,25 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             path = QtWidgets.QFileDialog.getOpenFileName(
                     self, 'Open File', '', 'CSV(*.csv)')
             if path[0] != '' and path is not None:
-                with open(path[0], 'r') as stream:
+                with open(path[0], 'r', encoding='utf-8') as stream:
                     self.tableWidget.setRowCount(0)
                     self.tableWidget.setColumnCount(0)
-                    self.tableWidget.create_table_cells()
-                    self.tableWidget.initialize_cells()
-                    data = list(csv.reader(stream))[2::2]
+                    self.tableHidden.setRowCount(0)
+                    self.tableHidden.setColumnCount(0)
+                    self.new_table()
+                    data = list(csv.reader(stream))[::2]
+                    for i in range(len(data)): #rows
+                        for k in range(len(data[i])): #cols
+                            cell = data[i][k]
+                            if cell is None or cell == "":
+                                item  = QtWidgets.QTableWidgetItem(" ")
+                            else:
+                                item = QtWidgets.QTableWidgetItem(cell)
+                            if i >= self.tableWidget.rowCount(): self.add_row()
+                            if k >= self.tableWidget.columnCount(): self.add_column()
+                            self.tableWidget.setItem(i, k, item)
+                with open(path[0][:-4] + 'h' + path[0][-4:], 'r', encoding='utf-8') as stream:
+                    data = list(csv.reader(stream))[::2]
                     for i in range(len(data)):
                         for k in range(len(data[i])):
                             cell = data[i][k]
@@ -326,9 +352,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                 item  = QtWidgets.QTableWidgetItem(" ")
                             else:
                                 item = QtWidgets.QTableWidgetItem(cell)  
-                            self.tableWidget.setItem(i, k, item)
+                            self.tableHidden.setItem(i, k, item)
                 self.save_value = 1
                 self.save_path = path[0]
+                self.setWindowTitle("VExcel" + path[0][:-4] + 'h' + path[0][-4:])
         except Exception as exp:
             
             self.LineEdit.setText(f"{exp}")
