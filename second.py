@@ -148,7 +148,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # ТЕКСТ попадает в вторую таблицу, обрабатывается и получается РЕЗУЛЬТАТ
         # Результат попадает в ячейку
         # ТЕКСТ выводится в строчку
-        print("ON ITEM CHANGED")
+        #print("ON ITEM CHANGED")
         self.tableWidget.blockSignals(True)
         row = self.tableWidget.currentRow()
         column = self.tableWidget.currentColumn()
@@ -168,6 +168,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.tableWidget.blockSignals(False)
         if num == 0:
             self.onItemChanged(1)
+        self.update()
         
 
     def onTextChanged(self):
@@ -190,6 +191,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         #print(itemW.text())
         self.tableWidget.setItem(row, column, itemW)
         self.tableWidget.blockSignals(False)
+        self.update()
     
     def onItemSelectionChanged(self):
         self.tableWidget.blockSignals(True)
@@ -202,6 +204,34 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         cell_text = item_from_cell.text()
         self.LineEdit.setText(cell_text)
         self.tableWidget.blockSignals(False)
+
+    def deleteContent(self):
+        pass
+
+    def update(self):
+
+        self.tableWidget.blockSignals(True)
+        row = self.tableWidget.rowCount()
+        column = self.tableWidget.columnCount()
+        #print("R:", row, "COL:", column)
+        for i in range(row):
+            for k in range(column):
+                item_from_cell = self.tableHidden.item(i, k)
+                try:
+                    text = item_from_cell.text()
+                    if type(text) == None or text.strip() == '':
+                        continue
+                except Exception as exp:
+                    continue
+                #print(i, k)
+                
+                #print("TEXT", text)
+                result_text  = self.processeer(text)
+                result_item = QTableWidgetItem(result_text)
+                #print("RES", result_item)
+                self.tableWidget.setItem(i, k, result_item)
+        self.tableWidget.blockSignals(False)
+    
 
     def add_row(self):
         self.tableWidget.add_row()
@@ -241,6 +271,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     # save func doesnt save
     #
     def handleSave(self, path=('','')):
+        self.tableWidget.blockSignals(True)
         try:
             if path[0] == '':
                 path = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'CSV(*.csv)')
@@ -262,7 +293,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 self.save_place = path
         except Exception as exp:
                 self.LineEdit.setText(f"{exp}")
-
+        finally:
+            self.tableWidget.blockSignals(False)
 
     def handleOpen(self,):
         self.tableWidget.blockSignals(True)
@@ -295,14 +327,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     #
     # Processer
     #
-    def processeer(self, item: str):
+    def processeer(self, item: str, num=10):
         # gets calculated value
         # needs to be called every time sth changes
+        if num == 0:
+            #recursion limit
+            return item
         try:
             text = item
             # if not formula returns itself
             if not text.startswith("=="):
-                print("NOT ==")
+                #print("NOT ==")
                 return text
 
 
@@ -313,16 +348,16 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             for i in range(len(new_text)-1):
                 row, column = 0, 0
                 first_letter = new_text[i]
-                print("FL: " + first_letter)
+                #print("FL: " + first_letter)
                 alphabet = self.tableWidget.alphabet
                 if first_letter in alphabet:
-                    print("first letter in alphabet")
+                    #print("first letter in alphabet")
                     second_letter = new_text[i+1]
-                    print(second_letter)
+                    #print(second_letter)
                     #A1
                     ind = ''
                     if second_letter in '1234567890':
-                        print(second_letter + "in nums")
+                        #print(second_letter + "in nums")
                         for k in range(i+1, len(new_text)):
                             if new_text[k] in '1234567890':
                                 ind += new_text[k]
@@ -336,7 +371,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                         column = self.tableWidget.alpha.index(first_letter)
                     #AA2
                     elif second_letter in alphabet:
-                        print(second_letter + " 2 in alphabet")
+                        #print(second_letter + " 2 in alphabet")
                         for k in range(i+2, len(new_text)):
                             if new_text[k].isnumeric():
                                 ind += new_text[k]
@@ -347,47 +382,48 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                             return result
                         to_replace.append(first_letter + second_letter + ind)
                         row = int(ind) - 1
-                        print(first_letter + second_letter)
+                        #print(first_letter + second_letter)
                         column = self.tableWidget.alpha.index(first_letter+second_letter)
                     else:
-                        print("A1 and AA2 doesnt match")
+                        #print("A1 and AA2 doesnt match")
                         result = "#Wrong input(" + (text) + ")."
                         return result
                         
-                    print("row", row)
-                    print("col ", column)
+                    #print("row", row)
+                    #print("col ", column)
                     item_from_cell = self.tableHidden.item(row, column)
                     if type(item_from_cell) == type(None):
-                        print("TYPE NONE")
+                        #print("TYPE NONE")
                         result = "#Wrong input(" + (text) + ")."
                         return result
-                    result_from_cell = self.processeer(item_from_cell.text())
-                    print("TO REPLACE:", to_replace)
-                    print("WITH:", result_from_cell)
-                    #a2+a2
+                    
+                    result_from_cell = self.processeer(item_from_cell.text(), num-1)
                     replace_with.append(result_from_cell)
+                   # print("TO REPLACE:", to_replace)
+                    #print("WITH:", replace_with)
+                    #a2+a2
             for i in range(len(to_replace)):
                 new_text = new_text.replace(to_replace[i], replace_with[i])
             
-            print(new_text)
+            #print(new_text)
             for i in new_text:
                 if i not in '1234567890<>,.+-/*&%||() minax':
-                    print(i)
-                    print("Bad symbol")
+                    #print(i)
+                    #print("Bad symbol")
                     return "#Bad symbol(" + text + ")."
             try:                
                 result = eval(new_text)
             except:
-                print("Eval doesnt calc")
+                #print("Eval doesnt calc")
                 result = "#Wrong input(" + (text) + ")."
-            print("Result: ", result)
+           # print("Result: ", result)
             if result == True:
                 result = "Істина"
             elif result == False:
                 result = "Хиба"
             return str(result)
         except ZeroDivisionError as exp:
-            print(exp)
+            #print(exp)
             result = "#Wrong input(" + (text) + ")."
             return result
     #

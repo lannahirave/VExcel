@@ -15,9 +15,14 @@ class myapp(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         if self.ui.LineEdit.hasFocus() and event.key() in (QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return):
-            print("ENTER event")
+            print("ENTER-line event")
             self.ui.onTextChanged()
-           
+        if self.ui.tableWidget.hasFocus() and event.key() in (QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return):
+            print("ENTER-table event")
+            self.ui.update()
+        elif self.ui.tableWidget.hasFocus() and event.key() in (QtCore.Qt.Key_Backspace, QtCore.Qt.Key_Delete):
+            print("Delete event")
+            self.ui.deleteContent()
 
     def closeEvent(self, event):
         """Generate 'question' dialog on clicking 'X' button in title bar.
