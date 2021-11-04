@@ -126,6 +126,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionAddColumn.triggered.connect(self.add_column)
         self.action = QtWidgets.QAction(MainWindow)
         self.action.setObjectName("action")
+        self.action.triggered.connect(self.help)
         self.action_2 = QtWidgets.QAction(MainWindow)
         self.action_2.setObjectName("action_2")
         self.menuFile.addAction(self.actionNew)
@@ -137,10 +138,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuEdit.addAction(self.actionAddRow)
         self.menuEdit.addAction(self.actionAddColumn)
         self.menuAbout.addAction(self.action)
-        self.menuAbout.addAction(self.action_2)
+        #self.menuAbout.addAction(self.action_2)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
-        #self.menubar.addAction(self.menuAbout.menuAction())
+        self.menubar.addAction(self.menuAbout.menuAction())
         self.tableWidget.itemChanged.connect(self.onItemChanged)
         self.tableWidget.itemSelectionChanged.connect(self.onItemSelectionChanged)
         #self.tableWidget.currentItemChanged.connect(self.onItemChanged)
@@ -470,6 +471,24 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             result = "#Wrong input(" + (text) + ")."
             return result
     #
+    def help(self):
+        box = QMessageBox()
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle('Допомога')
+        icon0 = QtGui.QIcon()
+        icon0.addPixmap(QtGui.QPixmap(":/iconsMain/images/new-document.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        box.setWindowIcon(icon0)
+        box.setText("Нікітін Валерій К-24\nВаріант: 28\n+, -, *, / (бінарні операції);\n"\
+            "mod, dіv;\nmmax(x1,x2,...,xN), mmіn(x1,x2,...,xN) (N>=1);\n =, <, >;<=, >=, <>;"\
+            "\n Натискання кнопки DEL видаляє значення клітинок, а не самі стовпчики/рядочки."    )
+        box.setStandardButtons(QMessageBox.Close)
+        close = box.button(QMessageBox.Close)
+        close.setText("Ок")
+        
+        box.exec()
+        if box.clickedButton() == close:
+            box.close()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "VExcel"))

@@ -35,7 +35,6 @@ class myapp(QtWidgets.QMainWindow):
         save = QMessageBox.Save
         box.setWindowTitle(' ')
         box.setText("Зберігти зміни?")
-        #box.setIcon()
         box.setStandardButtons(QMessageBox.Save|QMessageBox.Close| QMessageBox.Cancel)
         save = box.button(QMessageBox.Save)
         save.setText('Зберігти')
