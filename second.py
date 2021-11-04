@@ -258,7 +258,27 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.tableHidden.add_column()
 
     def confirm_new_table(self):
-        pass
+        box = QMessageBox()
+        box.setIcon(QMessageBox.Question)
+        box.setWindowTitle('Допомога')
+        icon0 = QtGui.QIcon()
+        icon0.addPixmap(QtGui.QPixmap(":/iconsMain/images/new-document.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        box.setWindowIcon(icon0)
+        box.setText("Створити нову таблицю?")
+        box.setStandardButtons(QMessageBox.Ok|QMessageBox.Close)
+        no = box.button(QMessageBox.Close)
+        no.setText("Скасувати")
+        yes = box.button(QMessageBox.Ok)
+        yes.setText("Створити")
+        
+        box.exec()
+        if box.clickedButton() == no:
+            box.close()
+            return False
+        else:
+            box.close()
+            return True
+
 
     def new_table(self):
         confirmation: bool = self.confirm_new_table()
@@ -278,7 +298,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     # Functions for saving tables
     # 
     def save(self):
-        print("SELF SAVES:", self.save_value, self.save_path)
+        #print("SELF SAVES:", self.save_value, self.save_path)
         if self.save_value == 1:
             return
         elif self.save_path != '':
@@ -387,7 +407,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         # needs to be called every time sth changes
         if num == 0:
             #recursion limit
-            return item
+            return "Recursion limit: " + item
         try:
             text = item
             # if not formula returns itself
@@ -419,7 +439,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                             else:
                                 break
                         if ind == '':
-                            result = "#Wrong input(" + (text) + ")."
+                            result = "#No index:  " + (text)
                             return result
                         to_replace.append(first_letter + ind)
                         row = int(ind) - 1
@@ -433,7 +453,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                             else:
                                 break
                         if ind == '':
-                            result = "#Wrong input(" + (text) + ")."
+                            result = "No index: " + (text)
                             return result
                         to_replace.append(first_letter + second_letter + ind)
                         row = int(ind) - 1
@@ -441,11 +461,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                         try:
                             column = self.tableWidget.alpha.index(first_letter+second_letter)
                         except:
-                            result = "#Wrong input(" + (text) + ")."
+                            result = "#Possible wrong indices error: " + (text)
                             return result
                     else:
                         #print("A1 and AA2 doesnt match")
-                        result = "#Wrong input(" + (text) + ")."
+                        result = "#Wrong input: " + (text)
                         return result
                         
                     #print("row", row)
@@ -453,7 +473,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                     item_from_cell = self.tableHidden.item(row, column)
                     if type(item_from_cell) == type(None):
                         #print("TYPE NONE")
-                        result = "#Wrong input(" + (text) + ")."
+                        result = "#Empty cell error: " + (text)
                         return result
                     
                     result_from_cell = self.processer(item_from_cell.text(), num-1)
@@ -470,23 +490,22 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 if i not in '1234567890<>,.+-/*&%||()= minax':
                     #print(i)
                     #print("Bad symbol")
-                    return "#Bad symbol(" + text + ")."
+                    return "#Bad symbol: " + text
             try:                
                 result = eval(new_text)
             except ZeroDivisionError:
-                result = "#Zero division error(" + (text) + ")."
+                result = "#Zero division error: " + (text)
             except:
                 #print("Eval doesnt calc")
-                result = "#Wrong input(" + (text) + ")."
+                result = "#Bad expression: " + (text)
            # print("Result: ", result)
             if result == True and type(result)==bool:
                 result = "Істина"
             elif result == False and type(result)==bool:
                 result = "Хиба"
             return str(result)
-        except ZeroDivisionError as exp:
-            #print(exp)
-            result = "#Wrong input(" + (text) + ")."
+        except Exception as exp:
+            result = f"#{exp}: " + (text)
             return result
     #
     def help(self):
