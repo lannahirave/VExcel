@@ -140,7 +140,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuAbout.addAction(self.action_2)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
-        self.menubar.addAction(self.menuAbout.menuAction())
+        #self.menubar.addAction(self.menuAbout.menuAction())
         self.tableWidget.itemChanged.connect(self.onItemChanged)
         self.tableWidget.itemSelectionChanged.connect(self.onItemSelectionChanged)
         #self.tableWidget.currentItemChanged.connect(self.onItemChanged)
@@ -421,7 +421,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                         to_replace.append(first_letter + second_letter + ind)
                         row = int(ind) - 1
                         #print(first_letter + second_letter)
-                        column = self.tableWidget.alpha.index(first_letter+second_letter)
+                        try:
+                            column = self.tableWidget.alpha.index(first_letter+second_letter)
+                        except:
+                            result = "#Wrong input(" + (text) + ")."
+                            return result
                     else:
                         #print("A1 and AA2 doesnt match")
                         result = "#Wrong input(" + (text) + ")."
