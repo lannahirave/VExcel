@@ -457,6 +457,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                     return "#Bad symbol(" + text + ")."
             try:                
                 result = eval(new_text)
+            except ZeroDivisionError:
+                result = "#Zero division error(" + (text) + ")."
             except:
                 #print("Eval doesnt calc")
                 result = "#Wrong input(" + (text) + ")."
