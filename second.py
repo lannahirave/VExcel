@@ -178,6 +178,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         if num == 0:
             self.onItemChanged(1)
         self.update()
+        self.save_value = 0
         
 
     def onTextChanged(self):
@@ -201,6 +202,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.tableWidget.setItem(row, column, itemW)
         self.tableWidget.blockSignals(False)
         self.update()
+        self.save_value = 0
     
     def onItemSelectionChanged(self):
         self.tableWidget.blockSignals(True)
@@ -255,9 +257,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.tableWidget.add_column()
         self.tableHidden.add_column()
 
+    def confirm_new_table(self):
+        pass
+
     def new_table(self):
+        confirmation: bool = self.confirm_new_table()
+        if not confirmation:
+            return
         self.table_default()
         self.setWindowTitle("VExcel")
+        self.save_value = 0
+        self.save_path = ''
     
     def table_default(self):
         self.tableWidget.to_default()
@@ -266,10 +276,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.save_path = ''
     #
     # Functions for saving tables
-    # TODO HIDDEN TABLE
+    # 
     def save(self):
-        print(self.save_value, self.save_path)
-        if self.save_value == 1 and self.save_path != '':
+        print("SELF SAVES:", self.save_value, self.save_path)
+        if self.save_value == 1:
+            return
+        elif self.save_path != '':
             self.handleSave((self.save_path, ''))
         else:
             self.handleSave()
@@ -284,6 +296,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     #
     def handleSave(self, path=('','')):
         self.tableWidget.blockSignals(True)
+        print(path)
         try:
             if path[0] == '':
                 path = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'CSV(*.csv)')
@@ -314,12 +327,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                 rowdata.append('')
                         writer.writerow(rowdata)
                 self.save_value = 1
-                self.save_place = path
+                self.save_path = path[0]
+                print("NEW SAVE PATH", path[0])
                 self.setWindowTitle("VExcel" + path[0][:-4] + 'h' + path[0][-4:])
         except Exception as exp:
                 self.LineEdit.setText(f"{exp}")
         finally:
             self.tableWidget.blockSignals(False)
+
+    #
+    # open func
+    #
 
     def handleOpen(self,):
         self.tableWidget.blockSignals(True)
@@ -358,9 +376,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 self.save_path = path[0]
                 self.setWindowTitle("VExcel" + path[0][:-4] + 'h' + path[0][-4:])
         except Exception as exp:
-            
             self.LineEdit.setText(f"{exp}")
-            self.tableWidget.blockSignals(False)
         finally:
             self.tableWidget.blockSignals(False)
     #
