@@ -169,7 +169,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         item_cell = QTableWidgetItem(cell_text)
         self.tableHidden.setItem(row, column, item_cell)
         
-        result_text  = self.processeer(cell_text)
+        result_text  = self.processer(cell_text)
         result_item = QTableWidgetItem(result_text)
         self.tableWidget.setItem(row, column, result_item)
         self.LineEdit.setText(cell_text)
@@ -191,7 +191,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             return
         #print("Cell:", row, column )
         text = self.LineEdit.text()
-        result = self.processeer(text)
+        result = self.processer(text)
         itemH = QTableWidgetItem(text)
         self.tableHidden.setItem(row, column, itemH)
         #print(itemH.text())
@@ -240,7 +240,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 #print(i, k)
                 
                 #print("TEXT", text)
-                result_text  = self.processeer(text)
+                result_text  = self.processer(text)
                 result_item = QTableWidgetItem(result_text)
                 #print("RES", result_item)
                 self.tableWidget.setItem(i, k, result_item)
@@ -365,7 +365,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     #
     # Processer
     #
-    def processeer(self, item: str, num=10):
+    def processer(self, item: str, num=10):
         # gets calculated value
         # needs to be called every time sth changes
         if num == 0:
@@ -380,7 +380,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
 
             new_text = text[2:].replace("mod", "%").replace("div", "//").replace("mmax", "max")\
-                .replace("mmin", "min").replace("^", "**")
+                .replace("mmin", "min").replace("^", "**").replace("Хиба", "False").replace('Істина', 'True')
             to_replace = []
             replace_with = []
             for i in range(len(new_text)-1):
@@ -439,17 +439,18 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                         result = "#Wrong input(" + (text) + ")."
                         return result
                     
-                    result_from_cell = self.processeer(item_from_cell.text(), num-1)
+                    result_from_cell = self.processer(item_from_cell.text(), num-1)
                     replace_with.append(result_from_cell)
                    # print("TO REPLACE:", to_replace)
                     #print("WITH:", replace_with)
                     #a2+a2
             for i in range(len(to_replace)):
                 new_text = new_text.replace(to_replace[i], replace_with[i])
-            
+            new_text = new_text.replace("mod", "%").replace("div", "//").replace("mmax", "max")\
+                .replace("mmin", "min").replace("^", "**").replace("Хиба", "0").replace('Істина', '1')
             #print(new_text)
             for i in new_text:
-                if i not in '1234567890<>,.+-/*&%||() minax':
+                if i not in '1234567890<>,.+-/*&%||()= minax':
                     #print(i)
                     #print("Bad symbol")
                     return "#Bad symbol(" + text + ")."
@@ -459,9 +460,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 #print("Eval doesnt calc")
                 result = "#Wrong input(" + (text) + ")."
            # print("Result: ", result)
-            if result == True:
+            if result == True and type(result)==bool:
                 result = "Істина"
-            elif result == False:
+            elif result == False and type(result)==bool:
                 result = "Хиба"
             return str(result)
         except ZeroDivisionError as exp:

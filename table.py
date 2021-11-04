@@ -12,6 +12,7 @@ class TableModel(QtWidgets.QTableWidget):
         self.last_header = self.alpha[-1]
         self.create_table_cells()
         self.initialize_cells()
+        self.setToolTip("DEL видаляє зміст")
         
 
 
