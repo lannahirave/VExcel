@@ -124,11 +124,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionAddColumn = QtWidgets.QAction(MainWindow)
         self.actionAddColumn.setObjectName("actionAddRow")
         self.actionAddColumn.triggered.connect(self.add_column)
-        self.action = QtWidgets.QAction(MainWindow)
-        self.action.setObjectName("action")
-        self.action.triggered.connect(self.help)
-        self.action_2 = QtWidgets.QAction(MainWindow)
-        self.action_2.setObjectName("action_2")
+        self.actionhelp = QtWidgets.QAction(MainWindow)
+        self.actionhelp.setObjectName("help")
+        self.actionhelp.triggered.connect(self.help)
+        self.actionSizeToContext = QtWidgets.QAction(MainWindow)
+        self.actionSizeToContext.setObjectName("SizeToContext")
+        self.actionSizeToContext.triggered.connect(self.sizing_to_contents)
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
@@ -137,8 +138,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuFile.addAction(self.actionExit)
         self.menuEdit.addAction(self.actionAddRow)
         self.menuEdit.addAction(self.actionAddColumn)
-        self.menuAbout.addAction(self.action)
-        #self.menuAbout.addAction(self.action_2)
+        self.menuEdit.addAction(self.actionSizeToContext)
+        self.menuAbout.addAction(self.actionhelp)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuAbout.menuAction())
@@ -526,6 +527,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         if box.clickedButton() == close:
             box.close()
 
+    def set_color(self):
+        self.tableWidget.blockSignals(True)
+        row, column = self.tableWidget.currentRow(), self.tableWidget.currentColumn()
+        if row==column == -1 :
+            self.tableWidget.blockSignals(False)
+            return
+
+    def sizing_to_contents(self):
+        self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.resizeRowsToContents() 
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "VExcel"))
@@ -537,8 +549,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionSave.setText(_translate("MainWindow", "Зберегти"))
         self.actionSave_as.setText(_translate("MainWindow", "Зберегти як"))
         self.actionExit.setText(_translate("MainWindow", "Вийти"))
-        self.action.setText(_translate("MainWindow", "Допомога"))
-        self.action_2.setText(_translate("MainWindow", "Про програму"))
+        self.actionhelp.setText(_translate("MainWindow", "Допомога"))
+        self.actionSizeToContext.setText(_translate("MainWindow", "Змінити розміри"))
         self.actionAddRow.setText(_translate("MainWindow", "Додати строку"))
         self.actionAddColumn.setText(_translate("MainWindow", "Додати колонку"))
 
