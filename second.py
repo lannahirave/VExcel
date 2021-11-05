@@ -130,6 +130,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionSizeToContext = QtWidgets.QAction(MainWindow)
         self.actionSizeToContext.setObjectName("SizeToContext")
         self.actionSizeToContext.triggered.connect(self.sizing_to_contents)
+        self.actionColor = QtWidgets.QAction(MainWindow)
+        self.actionColor.setObjectName("Color")
+        self.actionColor.triggered.connect(self.set_color)
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
@@ -139,6 +142,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.menuEdit.addAction(self.actionAddRow)
         self.menuEdit.addAction(self.actionAddColumn)
         self.menuEdit.addAction(self.actionSizeToContext)
+        #self.menuEdit.addAction(self.actionColor)
         self.menuAbout.addAction(self.actionhelp)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
@@ -355,11 +359,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                 self.LineEdit.setText(f"{exp}")
         finally:
             self.tableWidget.blockSignals(False)
-
     #
     # open func
     #
-
     def handleOpen(self,):
         self.tableWidget.blockSignals(True)
         try:
@@ -529,10 +531,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def set_color(self):
         self.tableWidget.blockSignals(True)
-        row, column = self.tableWidget.currentRow(), self.tableWidget.currentColumn()
-        if row==column == -1 :
-            self.tableWidget.blockSignals(False)
-            return
+        for item in self.tableWidget.selectedItems():
+            row = item.row()
+            col = item.column()
+            self.tableWidget.setItem(row, col, QTableWidgetItem(""))
+            self.tableHidden.setItem(row, col, QTableWidgetItem(""))
+            self.tableWidget.item(row, col).setBackground(QtGui.QColor(100,100,150))
+        self.tableWidget.blockSignals(False)
 
     def sizing_to_contents(self):
         self.tableWidget.resizeColumnsToContents()
@@ -553,4 +558,5 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.actionSizeToContext.setText(_translate("MainWindow", "Змінити розміри"))
         self.actionAddRow.setText(_translate("MainWindow", "Додати строку"))
         self.actionAddColumn.setText(_translate("MainWindow", "Додати колонку"))
+        self.actionColor.setText(_translate("MainWindow", "Змінити кольор"))
 
