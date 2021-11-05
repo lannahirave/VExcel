@@ -13,6 +13,7 @@ class TableModel(QtWidgets.QTableWidget):
         self.create_table_cells()
         self.initialize_cells()
         self.setToolTip("DEL видаляє зміст")
+        self.set_borders()
         
 
 
@@ -75,6 +76,24 @@ class TableModel(QtWidgets.QTableWidget):
         self.n = 200
         self.create_table_cells()
         self.initialize_cells()
+    
+    def set_borders(self):
+        self.setStyleSheet(
+        "QHeaderView::section{"
+            "border-top:0px solid #D8D8D8;"
+            "border-left:0px solid #D8D8D8;"
+            "border-right:1px solid #D8D8D8;"
+            "border-bottom: 1px solid #D8D8D8;"
+            "background-color:white;"
+            "padding:4px;"
+        "}"
+        "QTableCornerButton::section{"
+            "border-top:0px solid #D8D8D8;"
+            "border-left:0px solid #D8D8D8;"
+            "border-right:1px solid #D8D8D8;"
+            "border-bottom: 1px solid #D8D8D8;"
+            "background-color:white;"
+        "}")
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
