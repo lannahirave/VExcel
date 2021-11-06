@@ -286,6 +286,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             return
         self.table_default()
         self.setWindowTitle("VExcel")
+        self.LineEdit.clear()
         self.save_value = 0
         self.save_path = ''
     
@@ -366,11 +367,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                     self, 'Open File', '', 'CSV(*.csv)')
             if path[0] != '' and path is not None:
                 with open(path[0], 'r', encoding='utf-8') as stream:
+                    if not self.confirm_new_table():
+                        return
                     self.tableWidget.setRowCount(0)
                     self.tableWidget.setColumnCount(0)
                     self.tableHidden.setRowCount(0)
                     self.tableHidden.setColumnCount(0)
-                    self.new_table()
                     data = list(csv.reader(stream))[::2]
                     for i in range(len(data)): #rows
                         for k in range(len(data[i])): #cols
@@ -379,6 +381,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                                 item  = QtWidgets.QTableWidgetItem(" ")
                             else:
                                 item = QtWidgets.QTableWidgetItem(cell)
+                                #print(cell)
                             if i >= self.tableWidget.rowCount(): self.add_row()
                             if k >= self.tableWidget.columnCount(): self.add_column()
                             self.tableWidget.setItem(i, k, item)
