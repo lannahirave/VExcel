@@ -3,7 +3,7 @@
 # creates launcher window
 from first import Ui_main
 import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 
 # Stable version of launcher
 

@@ -1,6 +1,6 @@
 #table class with new functions
-from PyQt5 import QtCore, QtGui, QtWidgets
-import sys, re
+from PyQt5 import QtWidgets
+import sys
 
 class TableModel(QtWidgets.QTableWidget):
     def __init__(self):

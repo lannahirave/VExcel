@@ -4,7 +4,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QKeyEvent, QKeySequence
 from table import TableModel
 import app_rc
 import csv
@@ -224,6 +223,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
            self.tableWidget.setItem(row, col, QTableWidgetItem(""))
            self.tableHidden.setItem(row, col, QTableWidgetItem(""))
         self.tableWidget.blockSignals(False)
+        self.update()
 
     def update(self):
 
