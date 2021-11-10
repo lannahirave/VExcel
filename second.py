@@ -487,10 +487,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             for i in range(len(to_replace)):
                 new_text = new_text.replace(to_replace[i], replace_with[i])
             new_text = new_text.replace("mod", "%").replace("div", "//").replace("mmax", "max")\
-                .replace("mmin", "min").replace("^", "**").replace("Хиба", "0").replace('Істина', '1')
+                .replace("mmin", "min").replace("^", "**").replace("Хиба", "False").replace('Істина', 'True')
             #print(new_text)
             for i in new_text:
-                if i not in '1234567890<>,.+-/*&%||()= minax':
+                if i not in '1234567890<>,.+-/*&%||()= minaxTrueFalse':
                     #print(i)
                     #print("Bad symbol")
                     return "#Bad symbol: " + text
