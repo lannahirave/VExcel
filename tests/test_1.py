@@ -41,12 +41,9 @@ class Tests(unittest.TestCase):
             answer = application.ui.processer(data[i])
             #print("TEST", data[i], answer)
             print('Asserting that output of command "' + data[i] + '" is equal "' + answers[i] + '".', end=' ')
-            try:
-                self.assertEqual(answer, answers[i])
-                print(bcolors.OKGREEN + "SUCCESS." + bcolors.ENDC)
-            except AssertionError:
-                print(bcolors.WARNING + "FAILED." + bcolors.ENDC)
-
+            self.assertEqual(answer, answers[i])
+            print(bcolors.OKGREEN + "SUCCESS." + bcolors.ENDC)
+        
     def test_mod(self):
         """
         Test that it can do mod and div operations
@@ -58,11 +55,9 @@ class Tests(unittest.TestCase):
             answer = application.ui.processer(data[i])
             #print("TEST", data[i], answer)
             print('Asserting that output of command "' + data[i] + '" is equal "' + answers[i] + '".', end=' ')
-            try:
-                self.assertEqual(answer, answers[i])
-                print(bcolors.OKGREEN + "SUCCESS." + bcolors.ENDC)
-            except AssertionError:
-                print(bcolors.WARNING + "FAILED." + bcolors.ENDC)
+            self.assertEqual(answer, answers[i])
+            print(bcolors.OKGREEN + "SUCCESS." + bcolors.ENDC)
+            
 
     def test_mmax(self):
         """
@@ -76,12 +71,9 @@ class Tests(unittest.TestCase):
             answer = application.ui.processer(data[i])
             #print("TEST", data[i], answer)
             print('Asserting that output of command "' + data[i] + '" is equal "' + answers[i] + '".', end=' ')
-            try:
-                self.assertEqual(answer, answers[i])
-                print(bcolors.OKGREEN + "SUCCESS." + bcolors.ENDC)
-            except AssertionError:
-                print(bcolors.WARNING + "FAILED." + bcolors.ENDC)
-
+            self.assertEqual(answer, answers[i])
+            print(bcolors.OKGREEN + "SUCCESS." + bcolors.ENDC)
+            
 
 if __name__ == '__main__':
     unittest.main()
