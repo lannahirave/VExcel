@@ -181,6 +181,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         
 
     def onTextChanged(self):
+        print("On text changed")
         #sends input to hidden table (already reworked)
         self.tableWidget.blockSignals(True)
         if not self.LineEdit.hasFocus():
@@ -193,6 +194,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         #print("Cell:", row, column )
         text = self.LineEdit.text()
         result = self.processer(text)
+        print(text)
+        print(result)
         itemH = QTableWidgetItem(text)
         self.tableHidden.setItem(row, column, itemH)
         #print(itemH.text())
@@ -204,6 +207,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.save_value = 0
     
     def onItemSelectionChanged(self):
+        #changes lineEdit
         self.tableWidget.blockSignals(True)
         row = self.tableWidget.currentRow()
         column = self.tableWidget.currentColumn()
@@ -378,7 +382,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                         for k in range(len(data[i])): #cols
                             cell = data[i][k]
                             if cell is None or cell == "":
-                                item  = QtWidgets.QTableWidgetItem(" ")
+                                item  = QtWidgets.QTableWidgetItem("")
                             else:
                                 item = QtWidgets.QTableWidgetItem(cell)
                                 #print(cell)
@@ -391,7 +395,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
                         for k in range(len(data[i])):
                             cell = data[i][k]
                             if cell is None or cell == "":
-                                item  = QtWidgets.QTableWidgetItem(" ")
+                                item  = QtWidgets.QTableWidgetItem("")
                             else:
                                 item = QtWidgets.QTableWidgetItem(cell)  
                             self.tableHidden.setItem(i, k, item)
